@@ -1,10 +1,10 @@
 # BlackList
 ## Part I - Introduction to threads in JAVA
-using Start:
+using Start:  
 ![](imagenes/thstart1.PNG)
 ![](imagenes/thstart2.PNG)
 ![](imagenes/thstart3.PNG)  
-using Run:
+using Run:  
 ![](imagenes/thrun1.PNG)
 ![](imagenes/thrun2.PNG)
 ![](imagenes/thrun3.PNG)  
