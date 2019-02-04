@@ -39,29 +39,36 @@ public class HostBlackListsValidator {
         int ocurrencesCount=0;
         
         
+        
         HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();
         int segmentSize=skds.getRegisteredServersCount()/N;
         
-        AtomicInteger checkedListsCount=new AtomicInteger();
+        int checkedListsCount=0;
         ArrayList<checkSegment> threads=new ArrayList<checkSegment>();
         int initial=0;
         for(int i=0;i<N;i++) {
         	checkSegment cs;
+        	
         	if(i!=N-1) cs=new checkSegment(initial,initial+segmentSize,ipaddress);
         	else cs=new checkSegment(initial,skds.getRegisteredServersCount(),ipaddress);
-        
-        	initial+=segmentSize+1;
+        	
+        	initial+=segmentSize;
         	threads.add(cs);
         	cs.start();
         }
         for(checkSegment c:threads) {
-        	while(!c.ended()) {
-        		continue;
-        	}
+        	try {
+				c.join();
+				checkedListsCount+=c.inform();
+	        	System.out.println("the number of blacklists checked is "+checkedListsCount+" of "+skds.getRegisteredServersCount());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
         	for(int i:c.blacklist()) {
         		blackListOcurrences.add(i);
         	}
         	ocurrencesCount+=c.found();
+        	
         }
    
 //        for (int i=0;i<skds.getRegisteredServersCount() && ocurrencesCount<BLACK_LIST_ALARM_COUNT;i++){
